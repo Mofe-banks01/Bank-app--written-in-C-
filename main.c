@@ -26,14 +26,11 @@ int main()
         {
         }
         printf("\nWhat would you like to do?  ");
-        printf("\n1. Create Account\n2. Check Balance\n3. Withdraw\n4. Deposit\n");
-        scanf("%d", &option);
-        if (option < 1 && option > 4)
+        printf("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. Check Balance\n");
+        while (option < 1 || option > 4)
         {
-            printf("You entered in the wrong value . Please try again");
-
-            welcome = false;
-            continue;
+            printf("Input in your choice :   ");
+            scanf("%d", &option);
         }
         // Clears the input buffer
         int ch;
@@ -52,11 +49,10 @@ int main()
         int age;
         // Pin
         int pin;
-        char accountName[85];
         int balance;
 
         // ------------------------------------CREATING AN ACCOUNT-------------------------------------?//
-        if (option = 1)
+        if (option == 1)
         {
             // Query accepts the fullname , age , accountBalance of the new account to be created
             printf("\nEnter your FULLNAME:    ");
@@ -65,17 +61,10 @@ int main()
             scanf("%s", &phoneNumber);
             printf("\nEnter your age:    ");
             scanf("%d", &age);
-            printf("Please %s input a 4-digit pin:   ", FFullName);
-            scanf("\n%.4d", &pin);
-
-            while (strlen(accountName) < 5)
-            {
-                printf("\nEnter your desired accountName(Must not be less than 5-characters):  ");
-                scanf("%s", &accountName);
-                continue;
-            }
-            printf("\nENTER YOUR ACCOUNT BALANCE:  ");
+            printf("\nENTER YOUR ACCOUNT BALANCE:     \n");
             scanf("%d", &balance);
+            printf("\nPlease input a 4-digit pin:   ");
+            scanf("%d", &pin);
             // Directory manipulation. Used the DIR data structure to access the directory of this project in order to manipluate the files
 
             DIR *dir = opendir("C:\\Users\\DELL\\Documents\\Mofes stuff\\AI--ML\\C&C++\\Bank-app");
@@ -149,15 +138,17 @@ int main()
                 printf("\nGenerating account file details....");
                 FILE *accountfile = fopen(fileName, "w");
                 fprintf(accountfile, "%s\n", FFullName);
-                fprintf(accountfile, "%s\n", accountName);
+
                 fprintf(accountfile, "%d\n", balance);
-                fprintf(accountfile, "%d\n", pin);
+                fprintf(accountfile, "%s\n", phoneNumber);
+                fprintf(accountfile, "%.4d\n", pin);
                 fprintf(accountfile, "%d\n", age);
                 fclose(accountfile);
 
                 if (accountfile != NULL)
                 {
                     printf("\nYour Account has been successfully created.\nPlease Check %s for your account details.\nNow you can deposit , transfer and withdraw using the pin and the number you registered from this account", fileName);
+                    printf("\nYour account number is %lld", accountNum);
                 }
                 else
                 {
@@ -165,11 +156,56 @@ int main()
                     return true;
                     break;
                 }
-            '';'dsf'            }
+            }
+            break;
         }
-        else if (option = 2)
+        //-----------------------------------------DEPOSIT-----------------------------------------------//
+        else if (option == 2)
         {
-            printf("You need to login😊");
+            // User would need to login with their account number which is the number that was appended to the fileName of their prec=viously created account
+            printf("You'll need to login\n");
+            // Pointer to store the accountnumber
+            char loginAccountNumber[45];
+            printf("Please enter your account number:   ");
+            scanf("%s", loginAccountNumber);
+
+            // int accountBalanceLineBuffer = 4;
+            // Pointer below stored the name of the file which we wish to access based on the account number entered
+            char depositfile[75];
+            // Concatenate the accountnumber to the deposit file in order to access it effectively
+            sprintf(depositfile, "%s.txt", loginAccountNumber);
+            printf(depositfile);
+
+            // Pointer to store the value of the balance
+            char lineBuffer[128];
+            // Pointer for the account we wish to transfer to
+            FILE *accountdepositFile;
+            // Line count variable
+            int count = 0;
+            // Exact line number of account balance
+            int balanceLine = 2;
+            // Opens the file in reading mode
+            accountdepositFile = fopen(depositfile, "r");
+            if (accountdepositFile != NULL)
+            {
+                // Loops through the file searching for the account balance
+                while (fgets(lineBuffer, sizeof(lineBuffer), accountdepositFile))
+                {
+                    // Increment the linecount variable
+                    count++;
+                    if (count == balanceLine)
+                    {
+                        printf("\nYour current account balance is %s", lineBuffer);
+                        break;
+                    }
+                }
+                fclose(accountdepositFile);
+            }
+            else
+            {
+                perror("\nWe could not retrieve yor account details.\nPlease make sure that you entered in the correct account number");
+                return false;
+            }
         }
         break;
     }
