@@ -1,4 +1,4 @@
-Bank app created by mofe banks
+Bank app created by Mofe banks
 
 Functionalites:
 1.Creation of Account
